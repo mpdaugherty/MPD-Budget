@@ -37,4 +37,4 @@ class Transaction(models.Model):
     date = models.DateField()
     amount = models.DecimalField(decimal_places=2, max_digits = 16)
     note = models.TextField()
-#    currency = models.ForeignKeyField(choices=['RMB','USD'])
+    #    currency = models.ForeignKeyField(choices=['RMB','USD'])
