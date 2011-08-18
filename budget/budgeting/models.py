@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 
 #def Currency:
 #    exchange_rate = models.FloatField()
@@ -34,7 +35,7 @@ class Budget(models.Model):
 
 class Transaction(models.Model):
     budget = models.ForeignKey(Budget, related_name='transactions')
-    date = models.DateField()
+    date = models.DateField(default=date.today())
     amount = models.DecimalField(decimal_places=2, max_digits = 16)
     note = models.TextField()
     #    currency = models.ForeignKeyField(choices=['RMB','USD'])

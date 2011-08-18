@@ -1,7 +1,7 @@
 import os
 import sys
 
-path = '/var/www/mpdaugherty-budget/'
+path = '/var/www/mpdaugherty-budget/code'
 if path not in sys.path:
     sys.path.append(path)
 

@@ -16,18 +16,16 @@ class TransactionForm(ModelForm):
     formfield_callback = make_pretty_datefield
     class Meta:
         model = Transaction
+        exclude = { 'budget' }
 
 # Create your views here.
-def new(req):
+def home(req):
     if req.method == 'GET':
         form = TransactionForm()
         return render_to_response('new_transaction.html', RequestContext(req, {'form':form, 'total_left':Budget.default().amount_left}))
     if req.method == 'POST':
-        f = TransactionForm(req.POST)
-        new_transaction = f.save(commit=False)
-        new_transaction.save()
-        return redirect('new_transaction')
+        new_transaction = Transaction(budget = Budget.objects.get(id=1))
+        f = TransactionForm(req.POST, instance=new_transaction)
+        f.save()
+        return redirect('home')
     return HttpResponse("What request method are you using?  It's unhandled...")
-
-def home(req):
-    return HttpResponse("View")

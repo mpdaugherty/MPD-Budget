@@ -19,5 +19,5 @@ def deploy():
         with prefix('source env/bin/activate'):
             run('pip install -r code/requirements.txt')
         sudo('mv code/config/apache.prod.conf /etc/apache2/sites-available/mpd-budget')
-        sudo('ln -s /etc/apache2/sites-available/mpd-budget /etc/apache2/sites-enabled/mpd-budget')
+#        sudo('ln -s /etc/apache2/sites-enabled/mpd-budget /etc/apache2/sites-available/mpd-budget')
         sudo('/etc/init.d/apache2 restart')
