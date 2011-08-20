@@ -2,22 +2,24 @@
 <html>
 <head>
   <title>Budget</title>
-<link type="text/css"
-href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/base/jquery-ui.css"
-rel="Stylesheet" media="screen"/>
+  <link type="text/css"
+   href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/base/jquery-ui.css"
+   rel="Stylesheet" media="screen"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 </head>
 
 <body>
-<div style="width:400px">
-<h1>
-Amount Left = {{ total_left }} RMB
-</h1>
+<div style="width:100%">
+  <h1>
+  Amount Left = {{ total_left }} RMB
+  </h1>
 
-<form action="" method="post">
-{% csrf_token %}
-{{ form.as_p }}
-<button type="submit">Submit</button>
-</form>
+  <form action="" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Submit</button>
+  </form>
+</div>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js"></script>
@@ -25,8 +27,30 @@ Amount Left = {{ total_left }} RMB
 $(function() {
 $( ".datePicker" ).datepicker();
 });
+
+$(document).ready(function () {
+  $('#id_amount').change(function () {
+    var amt = parseInt(this.value, 10);
+    if (isNaN(amt))
+    {
+        alert("Please enter a number");
+        this.value = "";
+        return;
+    }
+
+    var amt_left_after_submit = {{ total_left }} - amt;
+    var amt_per_day_left_after_submit = amt_left_after_submit / {{ days_left }};
+    if ( amt_per_day_left_after_submit < .8 * {{ ideal_amount_per_day }})
+    {
+        $('body').css('background-color', 'red');
+    } else if ( amt_per_day_left_after_submit < {{ ideal_amount_per_day }}) {
+        $('body').css('background-color', 'yellow');
+    } else {
+        $('body').css('background-color', 'green');
+    }
+  });
+});
 </script>
-</div>
 </body>
 
 </html>
