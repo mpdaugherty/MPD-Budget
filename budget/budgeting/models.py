@@ -35,9 +35,15 @@ class Budget(models.Model):
         days_in_month = calendar.monthrange(today.year, today.month)[1]
         return self.total / days_in_month
 
+    def __unicode__(self):
+        return self.name
+
 class Transaction(models.Model):
     budget = models.ForeignKey(Budget, related_name='transactions')
     date = models.DateField(default=date.today())
     amount = models.DecimalField(decimal_places=2, max_digits = 16)
     note = models.TextField()
     #    currency = models.ForeignKeyField(choices=['RMB','USD'])
+
+    def __unicode__(self):
+        return '{0} RMB - {1}'.format(self.amount, self.note)

@@ -2,13 +2,19 @@ from .models import *
 from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect
-from django.forms import ModelForm
+from django.forms import ModelForm, Textarea
 
-def upgrade_fields(f):
+def upgrade_fields(f, widget=None, **kwargs):
     '''
     Upgrades fields to HTML5 where possible; includes jQuery date pickers for date fields, etc.
     '''
+
     formfield = f.formfield()
+
+    if widget != None:
+        # In this case, the user has specified the widget explicitly.
+        formfield.widget = widget
+
     if isinstance(f, models.DateField):
         formfield.widget.format = '%m/%d/%Y'
         formfield.widget.attrs.update({'class':'datePicker', 'readonly':'true'})
@@ -28,6 +34,7 @@ class TransactionForm(ModelForm):
     class Meta:
         model = Transaction
         exclude = { 'budget' }
+        widgets = { 'note': Textarea(attrs={'cols':35, 'rows':2}) }
 
 # Create your views here.
 def home(req):
