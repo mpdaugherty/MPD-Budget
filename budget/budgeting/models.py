@@ -13,7 +13,8 @@ class Budget(models.Model):
 
     @property
     def amount_left(self):
-        return reduce(lambda a, b: a-b.amount, self.transactions.all(), self.total)
+        today = date.today()
+        return reduce(lambda a, b: a-b.amount, self.transactions.filter(date__year=today.year, date__month=today.month), self.total)
 
     @classmethod
     def default(cls):
