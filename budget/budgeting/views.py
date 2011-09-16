@@ -1,4 +1,6 @@
 from .models import *
+import datetime
+from collections import OrderedDict
 from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect
@@ -41,7 +43,7 @@ def home(req):
     if req.method == 'GET':
         form = TransactionForm()
         b = Budget.default()
-        today = date.today()
+        today = datetime.date.today()
         days_in_month = calendar.monthrange(today.year, today.month)[1]
         days_left = days_in_month - today.day + 1
         return render_to_response('new_transaction.html',
@@ -58,9 +60,10 @@ def home(req):
     return HttpResponse("What request method are you using?  It's unhandled...")
 
 def view_transactions(req):
+    today = datetime.date.today()
     budget = Budget.default()
-    days = {}
-    for t in budget.transactions.all():
+    days = OrderedDict()
+    for t in budget.transactions.filter(date__year=today.year, date__month=today.month).order_by('date'):
         date = t.date
         try:
             day_model = days[date]
@@ -76,7 +79,6 @@ def view_transactions(req):
             day_model['transactions'] = day_transactions
 
         day_transactions.append(t)
-    print days
     return render_to_response('history.html',
                               RequestContext(req,
                                              {'days': days}))
