@@ -1,3 +1,4 @@
+{% load url from future %}
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <html> <head>
 <title></title>
@@ -6,11 +7,11 @@
 <body>
 <h1>History</h1>
 
-{% for day, transactions in days.items %}
+{% for day, day_model in days.items %}
 <div>
-  <h2>{{ day }}</h2>
+  <h2>{{ day }}, {{ day_model.amount_left }} RMB left</h2>
   <ul>
-    {% for t in transactions %}
+    {% for t in day_model.transactions %}
     <li>{{ t }}</li>
     {% endfor %}
   </ul>
@@ -19,7 +20,5 @@
 <p>You haven't entered any transactions yet!</p>
 {% endfor %}
 
-<hr>
-<address></address>
-<!-- hhmts start --> Last modified: Fri Sep 16 20:32:13 CST 2011 <!-- hhmts end -->
+  <a href="{% url 'budget.budgeting.views.home' %}">Enter Transaction</a>
 </body> </html>

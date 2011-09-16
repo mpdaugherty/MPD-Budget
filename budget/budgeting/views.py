@@ -63,13 +63,20 @@ def view_transactions(req):
     for t in budget.transactions.all():
         date = t.date
         try:
-            day = days[date]
+            day_model = days[date]
         except:
-            day = []
-            days[date] = day
-        day.append(t)
-    print days
+            day_model = {}
+            days[date] = day_model
+            day_model['amount_left'] = budget.amount_left_on_date(date)
 
+        try:
+            day_transactions = day_model['transactions']
+        except:
+            day_transactions = []
+            day_model['transactions'] = day_transactions
+
+        day_transactions.append(t)
+    print days
     return render_to_response('history.html',
                               RequestContext(req,
                                              {'days': days}))
