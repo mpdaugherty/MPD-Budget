@@ -56,3 +56,20 @@ def home(req):
         f.save()
         return redirect('home')
     return HttpResponse("What request method are you using?  It's unhandled...")
+
+def view_transactions(req):
+    budget = Budget.default()
+    days = {}
+    for t in budget.transactions.all():
+        date = t.date
+        try:
+            day = days[date]
+        except:
+            day = []
+            days[date] = day
+        day.append(t)
+    print days
+
+    return render_to_response('history.html',
+                              RequestContext(req,
+                                             {'days': days}))

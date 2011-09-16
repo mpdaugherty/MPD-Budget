@@ -6,12 +6,18 @@
    href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/base/jquery-ui.css"
    rel="Stylesheet" media="screen"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <style type="text/css">
+    body { padding: 0; margin: 0; width: 330px; }
+    #BudgetContainer { padding: 10px; }
+    h1 { margin: 0; }
+    label { display: block; }
+  </style>
 </head>
 
 <body>
-<div style="width:100%">
+<div id="BudgetContainer">
   <h1>
-  Amount Left = {{ total_left }} RMB
+  {{ total_left }} RMB Left
   </h1>
 
   <form action="" method="post">

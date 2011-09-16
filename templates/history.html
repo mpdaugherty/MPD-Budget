@@ -1,0 +1,25 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title></title>
+</head>
+
+<body>
+<h1>History</h1>
+
+{% for day, transactions in days.items %}
+<div>
+  <h2>{{ day }}</h2>
+  <ul>
+    {% for t in transactions %}
+    <li>{{ t }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% empty %}
+<p>You haven't entered any transactions yet!</p>
+{% endfor %}
+
+<hr>
+<address></address>
+<!-- hhmts start --> Last modified: Fri Sep 16 20:32:13 CST 2011 <!-- hhmts end -->
+</body> </html>
