@@ -40,9 +40,9 @@ class Budget(models.Model):
 
 class Transaction(models.Model):
     budget = models.ForeignKey(Budget, related_name='transactions')
-    date = models.DateField(default=date.today())
+    date = models.DateField(default=date.today)
     amount = models.DecimalField(decimal_places=2, max_digits = 16)
-    note = models.TextField()
+    note = models.CharField(max_length = 300, null=True, blank=True)
     #    currency = models.ForeignKeyField(choices=['RMB','USD'])
 
     def __unicode__(self):

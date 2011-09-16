@@ -2,7 +2,7 @@ from .models import *
 from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect
-from django.forms import ModelForm, Textarea
+from django.forms import ModelForm, TextInput
 
 def upgrade_fields(f, widget=None, **kwargs):
     '''
@@ -34,7 +34,7 @@ class TransactionForm(ModelForm):
     class Meta:
         model = Transaction
         exclude = { 'budget' }
-        widgets = { 'note': Textarea(attrs={'cols':35, 'rows':2}) }
+        widgets = { 'note': TextInput(attrs={'size':30}) }
 
 # Create your views here.
 def home(req):
