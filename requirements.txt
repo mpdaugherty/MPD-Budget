@@ -3,3 +3,10 @@ Fabric==1.2.0
 #MySQL-python==1.2.3
 South==0.7.3
 wsgiref==0.1.2
+
+# Social Authentication and requirements
+-e git://github.com/mpdaugherty/Django-Socialauth.git@master#egg=djangosocialauth
+python-openid>=2.0.0
+oauth>=1.0.0
+-e git+http://github.com/facebook/python-sdk.git#egg=facebook_python_sdk
+hg+https://pylinkedin.googlecode.com/hg/pylinkedin>=0.1

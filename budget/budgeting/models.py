@@ -1,15 +1,20 @@
 from django.db import models
+from django.contrib.auth import models as auth_models
 from datetime import date
 import calendar
 
-#def Currency:
-#    exchange_rate = models.FloatField()
+class UserBudget(models.Model):
+    is_admin = models.BooleanField(default=False)
+    user = models.ForeignKey(auth_models.User)
+    budget = models.ForeignKey('Budget')
+    class Meta:
+        unique_together = ['user', 'budget']
 
 # Create your models here.
 class Budget(models.Model):
     name = models.CharField(max_length=100, unique=True)
     total = models.DecimalField(decimal_places=2, max_digits = 16)
-#    currency
+    users = models.ManyToManyField(auth_models.User, through = UserBudget)
 
     @property
     def amount_left(self):
@@ -46,6 +51,7 @@ class Transaction(models.Model):
     amount = models.DecimalField(decimal_places=2, max_digits = 16)
     note = models.CharField(max_length = 300, null=True, blank=True)
     #    currency = models.ForeignKeyField(choices=['RMB','USD'])
+    User = models.ForeignKey(auth_models.User, related_name='transactions')
 
     def __unicode__(self):
         return '{0} RMB - {1}'.format(self.amount, self.note)
