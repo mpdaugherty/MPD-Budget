@@ -6,7 +6,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$', 'budget.budgeting.views.home', name='home'),
+    url(r'^$', 'budget.budgeting.views.add_transaction', name='home'),
+    url(r'^budget/edit$', 'budget.budgeting.views.edit_budget', name='edit_budget'),
     url(r'^transactions/recent$', 'budget.budgeting.views.view_transactions'),
     url(r'^accounts/', include('socialauth.urls')),
     url(r'^signin_complete$', 'socialauth.views.signin_complete'),

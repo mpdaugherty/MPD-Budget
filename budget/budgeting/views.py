@@ -1,7 +1,7 @@
 from .models import *
 import datetime
 from collections import OrderedDict
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotAllowed
 from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect
 from django.forms import ModelForm, TextInput
@@ -39,9 +39,15 @@ class TransactionForm(ModelForm):
         exclude = { 'budget', 'user' }
         widgets = { 'note': TextInput(attrs={'size':30}) }
 
-# Create your views here.
+class BudgetForm(ModelForm):
+    formfield_callback = upgrade_fields
+    class Meta:
+        model = Budget
+        exclude = { 'users' }
+
 @login_required
-def home(req):
+#TODO: @budget_required
+def add_transaction(req):
     if req.method == 'GET':
         form = TransactionForm()
         b = req.user.budgets.all()[0]
@@ -60,9 +66,10 @@ def home(req):
         f = TransactionForm(req.POST, instance=new_transaction)
         f.save()
         return redirect('home')
-    return HttpResponse("What request method are you using?  It's unhandled...")
+    return HttpResponseNotAllowed(['GET', 'POST'])
 
 @login_required()
+#TODO: @budget_required
 def view_transactions(req):
     today = datetime.date.today()
     budget = Budget.default()
@@ -86,3 +93,23 @@ def view_transactions(req):
     return render_to_response('history.html',
                               RequestContext(req,
                                              {'days': days}))
+@login_required()
+def edit_budget(req):
+    if req.method == 'GET':
+        if req.user.budgets.all().count() < 1:
+            form = BudgetForm()
+            return render_to_response('new_transaction.html',
+                                      RequestContext(req,
+                                                     {'form':form,
+                                                      'total_left': 1,
+                                                      'ideal_amount_per_day': 2,
+                                                      'days_left': 3,}))
+        return HttpResponse("You have a budget")
+    if req.method == 'POST':
+        f = BudgetForm(req.POST)
+        new_budget = f.save(commit=False)
+        new_budget.save()
+        user_new_budget_link = UserBudget(budget=new_budget, user=req.user, is_admin=True)
+        user_new_budget_link.save()
+        return redirect('edit_budget')
+    return HttpResponseNotAllowed(['GET', 'POST'])

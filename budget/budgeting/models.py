@@ -14,7 +14,7 @@ class UserBudget(models.Model):
 class Budget(models.Model):
     name = models.CharField(max_length=100, unique=True)
     total = models.DecimalField(decimal_places=2, max_digits = 16)
-    users = models.ManyToManyField(auth_models.User, through = UserBudget)
+    users = models.ManyToManyField(auth_models.User, through = UserBudget, related_name='budgets')
 
     @property
     def amount_left(self):
