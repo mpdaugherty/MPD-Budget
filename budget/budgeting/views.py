@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect
 from django.forms import ModelForm, TextInput
+from django.contrib.auth.decorators import login_required
 
 def upgrade_fields(f, widget=None, **kwargs):
     '''
@@ -35,14 +36,15 @@ class TransactionForm(ModelForm):
     formfield_callback = upgrade_fields
     class Meta:
         model = Transaction
-        exclude = { 'budget' }
+        exclude = { 'budget', 'user' }
         widgets = { 'note': TextInput(attrs={'size':30}) }
 
 # Create your views here.
+@login_required
 def home(req):
     if req.method == 'GET':
         form = TransactionForm()
-        b = Budget.default()
+        b = req.user.budgets.all()[0]
         today = datetime.date.today()
         days_in_month = calendar.monthrange(today.year, today.month)[1]
         days_left = days_in_month - today.day + 1
@@ -53,12 +55,14 @@ def home(req):
                                                   'ideal_amount_per_day': b.ideal_amount_per_day,
                                                   'days_left': days_left,}))
     if req.method == 'POST':
-        new_transaction = Transaction(budget = Budget.objects.get(id=1))
+        b = req.user.budgets.all()[0]
+        new_transaction = Transaction(budget = b, user=req.user)
         f = TransactionForm(req.POST, instance=new_transaction)
         f.save()
         return redirect('home')
     return HttpResponse("What request method are you using?  It's unhandled...")
 
+@login_required()
 def view_transactions(req):
     today = datetime.date.today()
     budget = Budget.default()
